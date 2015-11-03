@@ -24,6 +24,11 @@ describe('Convert data to csv using dsv', function() {
     }, label: 'Final Price'}
   ];
 
+  var missingFields = [
+    {value: 'engine', label: 'Engine', default: 'Tiny'},
+    {value: 'type', label: 'Type'}
+  ];
+
   describe('Unit tests', function() {
     describe('_getHeaderRow', function() {
       it('should get headers properly for string fields', function() {
@@ -59,6 +64,13 @@ describe('Convert data to csv using dsv', function() {
         transformer.options.delimiter = '!';
         var header = transformer._getBodyRow.call(transformer, data[0]);
         header.should.equal('nissan!350z!35000\r\n');
+      });
+      it('should use default properly for missing fields', function() {
+        var transformer = new JsonDSV();
+        transformer.options.fields = missingFields;
+        transformer.options.default = 'Not Specified';
+        var header = transformer._getBodyRow.call(transformer, data[0]);
+        header.should.equal('Tiny,Not Specified\r\n');
       });
     });
 

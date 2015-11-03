@@ -76,22 +76,22 @@ describe('Convert data to csv using dsv', function() {
 
     describe('_escapeValue', function() {
       it('should not escape unnecessarily', function() {
-        var transformer = new JsonDSV()
+        var transformer = new JsonDSV();
         var value = transformer._escapeValue('asdf');
         value.should.equal('asdf');
       });
       it('should escape \"s', function() {
-        var transformer = new JsonDSV()
+        var transformer = new JsonDSV();
         var value = transformer._escapeValue('as"df');
         value.should.equal('"as""df"');
       });
       it('should escape \\ns', function() {
-        var transformer = new JsonDSV()
+        var transformer = new JsonDSV();
         var value = transformer._escapeValue('asdf\n');
         value.should.equal('"asdf\n"');
       });
       it('should escape ,s', function() {
-        var transformer = new JsonDSV()
+        var transformer = new JsonDSV();
         var value = transformer._escapeValue('asdf,');
         value.should.equal('"asdf,"');
       });
@@ -100,7 +100,7 @@ describe('Convert data to csv using dsv', function() {
 
   describe('Integration tests', function() {
     it('should convert buffer properly', function(done) {
-      var transformer = new JsonDSV()
+      var transformer = new JsonDSV();
       transformer.dsv(data, {fields: stringFields}, function(err, csv) {
         csv.should.equal('make,model,nested.price\r\nnissan,350z,35000\r\nbmw,328i,34000\r\n');
         done();
@@ -108,7 +108,7 @@ describe('Convert data to csv using dsv', function() {
     });
 
     it('should convert stream properly', function(done) {
-      var transformer = new JsonDSV()
+      var transformer = new JsonDSV();
       es.readArray(data)
         .pipe(transformer.dsv({fields: stringFields}))
         .pipe(concat(function(csv) {
@@ -118,7 +118,7 @@ describe('Convert data to csv using dsv', function() {
     });
 
     it('.csv should work', function(done) {
-      var transformer = new JsonDSV()
+      var transformer = new JsonDSV();
       es.readArray(data)
         .pipe(transformer.csv({fields: stringFields}))
         .pipe(concat(function(csv) {
@@ -128,13 +128,34 @@ describe('Convert data to csv using dsv', function() {
     });
 
     it('.tsv should work', function(done) {
-      var transformer = new JsonDSV()
+      var transformer = new JsonDSV();
       es.readArray(data)
         .pipe(transformer.tsv({fields: stringFields}))
-        .pipe(concat(function(csv) {
-          csv.should.equal('make\tmodel\tnested.price\r\nnissan\t350z\t35000\r\nbmw\t328i\t34000\r\n');
+        .pipe(concat(function(tsv) {
+          tsv.should.equal('make\tmodel\tnested.price\r\nnissan\t350z\t35000\r\nbmw\t328i\t34000\r\n');
           done();
         }));
     });
+
+    it('should create fixture0.csv from fixture0.json', function(done) {
+      var fs = require('fs');
+      var JSONStream = require('JSONStream');
+      
+      var fields = [ '_id', 'index', 'guid', 'isActive', 'balance', 'picture', 'age', 'eyeColor', 'name', 'company', 'email', 'phone', 'address', 'about', 'registered', 'latitude', 'longitude', 'tags', 'range', 'friends', 'greeting', 'favoriteFruit' ];
+
+      var readStream = fs.createReadStream('./test/fixture0.json', 'utf8');
+      var expectedOutput = fs.readFileSync('./test/fixture0.csv', 'utf8');
+
+      var transformer = new JsonDSV();
+
+      readStream
+        .pipe(JSONStream.parse('*'))
+        .pipe(transformer.dsv({fields: fields}))
+        .pipe(concat(function(csv) {
+          csv.should.equal(expectedOutput);
+          done();
+        }));
+
+    })
   });
 });

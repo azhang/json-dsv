@@ -4,7 +4,7 @@
   "description": "A transformer for JSON to delimiter-separated values, such as CSV and TSV",
   "main": "index.js",
   "scripts": {
-    "test": "eslint . && istanbul cover _mocha --report lcovonly --dir $CIRCLE_ARTIFACTS -- -R spec",
+    "test": "eslint . && istanbul cover _mocha -- -R spec",
     "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   },
   "repository": {

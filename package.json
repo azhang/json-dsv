@@ -1,0 +1,41 @@
+{
+  "name": "json-dsv",
+  "version": "0.0.1",
+  "description": "A transformer for JSON to delimiter-separated values, such as CSV and TSV",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azhang/jsoncsv-stream.git"
+  },
+  "keywords": [
+    "json",
+    "dsv",
+    "csv",
+    "tsv",
+    "stream",
+    "parse",
+    "jsoncsv",
+    "convert",
+    "transform",
+    "export"
+  ],
+  "author": "A Zhang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/azhang/jsoncsv-stream/issues"
+  },
+  "homepage": "https://github.com/azhang/jsoncsv-stream#readme",
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "should": "^7.1.1"
+  },
+  "dependencies": {
+    "concat-stream": "^1.5.1",
+    "event-stream": "^3.3.2",
+    "lodash.get": "^3.7.0",
+    "object-assign": "^4.0.1"
+  }
+}

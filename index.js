@@ -55,7 +55,7 @@ Transformer.prototype.dsvStream = function(options) {
       writtenHeader = true;
     }
     this.emit('data', _this._getBodyRow(data));
-  })
+  });
 };
 
 Transformer.prototype.dsvBuffered = function(data, options, done) {

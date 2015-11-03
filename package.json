@@ -4,7 +4,8 @@
   "description": "A transformer for JSON to delimiter-separated values, such as CSV and TSV",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "eslint . && istanbul cover _mocha --report lcovonly --dir $CIRCLE_ARTIFACTS -- -R spec",
+    "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,8 @@
   "homepage": "https://github.com/azhang/jsoncsv-stream#readme",
   "devDependencies": {
     "JSONStream": "^1.0.6",
+    "coveralls": "^2.11.4",
+    "istanbul": "^0.4.0",
     "mocha": "^2.3.3",
     "should": "^7.1.1"
   },

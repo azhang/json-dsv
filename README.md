@@ -1,7 +1,7 @@
 json-dsv
 =========
 
-![Build status](https://travis-ci.org/azhang/json-dsv.svg?branch=master)
+[![Circle CI](https://circleci.com/gh/azhang/json-dsv.svg?style=svg)](https://circleci.com/gh/azhang/json-dsv)
 
 Transform JSON to delimiter-separated values, such as CSV and TSV. Supports streams.
 
@@ -65,6 +65,7 @@ transformer.dsv(data, options, function(err, dsv) {
     'path.to.value' // also equivalent to {label:'path.to.value', value:'path.to.value'}
   ]
 }
+```
 
 ### API
 

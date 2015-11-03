@@ -1,7 +1,9 @@
 json-dsv
 =========
 
-[![Circle CI](https://circleci.com/gh/azhang/json-dsv.svg?style=svg)](https://circleci.com/gh/azhang/json-dsv)
+[![npm version](https://badge.fury.io/js/json-dsv.svg)](https://badge.fury.io/js/json-dsv)
+[![Coverage Status](https://coveralls.io/repos/azhang/json-dsv/badge.svg?branch=feature%2Fcoveralls&service=github)](https://coveralls.io/github/azhang/json-dsv?branch=feature%2Fcoveralls)
+[![Circle CI](https://circleci.com/gh/azhang/json-dsv.svg?style=shield)](https://circleci.com/gh/azhang/json-dsv)
 
 Transform JSON to delimiter-separated values, such as CSV and TSV. Supports streams.
 

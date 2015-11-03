@@ -34,12 +34,12 @@ Transformer.prototype.dsv = function() {
 
 Transformer.prototype.csv = function() {
   this.options.delimiter = ',';
-  return this.dsv;
+  return this.dsv.apply(this, arguments);
 };
 
 Transformer.prototype.tsv = function() {
   this.options.delimiter = '\t';
-  return this.dsv;
+  return this.dsv.apply(this, arguments);
 };
 
 Transformer.prototype.dsvStream = function(options) {

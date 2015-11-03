@@ -1,0 +1,7 @@
+test:
+  post:
+    - npm run coveralls
+
+general:
+  artifacts:
+    - ./coverage

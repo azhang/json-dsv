@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azhang/jsoncsv-stream.git"
+    "url": "git+https://github.com/azhang/json-dsv.git"
   },
   "keywords": [
     "json",
@@ -26,9 +26,9 @@
   "author": "A Zhang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/azhang/jsoncsv-stream/issues"
+    "url": "https://github.com/azhang/json-dsv/issues"
   },
-  "homepage": "https://github.com/azhang/jsoncsv-stream#readme",
+  "homepage": "https://github.com/azhang/json-dsv#readme",
   "devDependencies": {
     "JSONStream": "^1.0.6",
     "coveralls": "^2.11.4",

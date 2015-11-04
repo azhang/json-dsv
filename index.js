@@ -28,7 +28,8 @@ Transformer.prototype.dsv = function() {
       this.options = assign(this.options, arguments[1]);
       return this.dsvBuffered(arguments[0], this.options, arguments[2]);
     default:
-      throw new Error('Too many arguments');
+      var callback = arguments[arguments.length - 1];
+      return callback(new Error('Too many arguments'));
   }
 };
 
@@ -42,14 +43,14 @@ Transformer.prototype.tsv = function() {
   return this.dsv.apply(this, arguments);
 };
 
-Transformer.prototype.dsvStream = function(options) {
-  if (!this.options.fields)
-    throw new Error('options.fields not specified');
-  
+Transformer.prototype.dsvStream = function(options) {  
   var writtenHeader = !this.options.includeHeader;
 
   var _this = this;
   return es.through(function write(data) {
+    if (!_this.options.fields)
+      return this.emit('error', new Error('options.fields not specified'));
+
     if (!writtenHeader) {
       this.emit('data', _this._getHeaderRow());
       writtenHeader = true;
@@ -60,7 +61,7 @@ Transformer.prototype.dsvStream = function(options) {
 
 Transformer.prototype.dsvBuffered = function(data, options, done) {
   if (!this.options.fields)
-    throw new Error('options.fields not specified');
+    return done(new Error('options.fields not specified'));
 
   es.readArray(data)
     .pipe(this.dsvStream(options))
@@ -90,7 +91,7 @@ Transformer.prototype._getBodyRow = function(data) {
   var values = this.options.fields.map(function(field, i) {
     var value;
 
-    if (typeof field === 'undefined' && typeof field.value === 'undefined') {
+    if (typeof field === 'undefined') {
       throw new Error('Invalid :fields. `fields[]` or `fields[][value]` must be a string or function.');
     } else if (typeof field === 'string' || typeof field.value === 'string') {
       var path = (typeof field === 'string') ? field : field.value;

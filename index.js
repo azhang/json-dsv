@@ -44,18 +44,22 @@ Transformer.prototype.tsv = function() {
 };
 
 Transformer.prototype.dsvStream = function(options) {  
+  if (!this.options.fields)
+    throw new Error('options.fields not specified');
+
   var writtenHeader = !this.options.includeHeader;
 
   var _this = this;
   return es.through(function write(data) {
-    if (!_this.options.fields)
-      return this.emit('error', new Error('options.fields not specified'));
-
-    if (!writtenHeader) {
-      this.emit('data', _this._getHeaderRow());
-      writtenHeader = true;
+    try {
+      if (!writtenHeader) {
+        this.emit('data', _this._getHeaderRow());
+        writtenHeader = true;
+      }
+      this.emit('data', _this._getBodyRow(data));    
+    } catch (err) {
+      this.emit('error', err);
     }
-    this.emit('data', _this._getBodyRow(data));
   });
 };
 
@@ -65,6 +69,9 @@ Transformer.prototype.dsvBuffered = function(data, options, done) {
 
   es.readArray(data)
     .pipe(this.dsvStream(options))
+    .on('error', function(err) {
+      done(err);
+    })
     .pipe(concat(function(buffer) {
       done(null, buffer)
     }));
@@ -77,8 +84,16 @@ Transformer.prototype._escapeValue = function(arg, forceQuoted) {
 };
 
 Transformer.prototype._getHeaderRow = function() {
-  var headers = this.options.fields.map(function(field, i) {
-    var header = (typeof field === 'string') ? field : (field.label || field.value);
+  var headers = this.options.fields.map(function(field) {
+    var header;
+
+    if (typeof field === 'string')
+      header = field;
+    else if (field && field.label)
+      header = field.label;
+    else
+      throw new Error('Invalid :fields. `fields[]` or `fields[][value]` must be a string or function.');
+
     return this._escapeValue(header);
   }, this);
 
@@ -86,20 +101,28 @@ Transformer.prototype._getHeaderRow = function() {
 };
 
 Transformer.prototype._getBodyRow = function(data) {
-  if (!data || Object.getOwnPropertyNames(data).length === 0) return '';
+  if (!data || Object.getOwnPropertyNames(data).length === 0)
+    return Array(this.options.fields.length).join(this.options.delimiter) + this.options.newLine;
 
   var values = this.options.fields.map(function(field, i) {
     var value;
 
-    if (typeof field === 'undefined') {
+    if (typeof field === 'undefined' || field === null)
       throw new Error('Invalid :fields. `fields[]` or `fields[][value]` must be a string or function.');
-    } else if (typeof field === 'string' || typeof field.value === 'string') {
+
+    // convert {} to ''
+    if (typeof field === 'object' && Object.getOwnPropertyNames(field).length === 0)
+      field = '';
+
+    if (typeof field === 'string' || typeof field.value === 'string') {
       var path = (typeof field === 'string') ? field : field.value;
       value = get(data, path, field.default || this.options.default);
     } else if (typeof field.value === 'function') {
       value = field.value(data);
       if (typeof value === 'undefined')
         value = field.default || this.options.default;
+    } else {
+      throw new Error('Invalid :fields. `fields[]` or `fields[][value]` must be a string or function.');
     }
 
     if (Array.isArray(value)) {

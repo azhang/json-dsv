@@ -62,6 +62,11 @@ transformer.dsv(data, options, function(err, dsv) {
       default: 'NULL' // default if value fn returns undefined
     },
 
+    // Supports Array path for nested values
+    {
+       value: ['path', 'to.something'] // {path: {'to.something': 'here'}}
+    },
+
     // Support pathname -> pathvalue
     'simplepath' // equivalent to {value:'simplepath'}
     'path.to.value' // also equivalent to {label:'path.to.value', value:'path.to.value'}

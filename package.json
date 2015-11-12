@@ -1,6 +1,6 @@
 {
   "name": "json-dsv",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A transformer for JSON to delimiter-separated values, such as CSV and TSV",
   "main": "index.js",
   "scripts": {

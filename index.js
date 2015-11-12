@@ -114,7 +114,10 @@ Transformer.prototype._getBodyRow = function(data) {
     if (typeof field === 'object' && Object.getOwnPropertyNames(field).length === 0)
       field = '';
 
-    if (typeof field === 'string' || typeof field.value === 'string') {
+    if (Array.isArray(field) || Array.isArray(field.value)) {
+      var path = (Array.isArray(field)) ? field : field.value;
+      value = get(data, path, field.default || this.options.default);
+    } else if (typeof field === 'string' || typeof field.value === 'string') {
       var path = (typeof field === 'string') ? field : field.value;
       value = get(data, path, field.default || this.options.default);
     } else if (typeof field.value === 'function') {

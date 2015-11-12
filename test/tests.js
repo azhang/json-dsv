@@ -137,6 +137,17 @@ describe('Convert data to csv using dsv', function() {
           err.message.should.equal('Invalid :fields. `fields[]` or `fields[][value]` must be a string or function.');
         }
       });
+      it('should work with array paths', function() {
+        var transformer = new JsonDSV();
+        transformer.options.fields = [
+          'dot.dot',
+          ['dot','dott.dot'],
+          {label: 'whatever', value: ['dot', 'dott.dot']}
+        ];
+        var dotDataRow = { 'dot.dot': 'nissan', 'dot': { 'dott.dot': '350z'} };
+        var row = transformer._getBodyRow.call(transformer, dotDataRow);
+        row.should.equal('nissan,350z,350z\r\n');
+      });
     });
 
     describe('_escapeValue', function() {
